@@ -39,5 +39,4 @@ const userComSche  =  new mongoose.Schema({
 const User = mongoose.model('User',userSchema);
 const UserCom = mongoose.model('UserCom',userComSche);
 
-module.exports = User;
-module.exports = UserCom;
+module.exports = {UserCom,User};
