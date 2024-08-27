@@ -19,6 +19,11 @@ const userSchema  =  new mongoose.Schema({
     {
         type : String,
         required: true,
+        enum: ['Admin','Dispatcher','Manager']
     }
 },{timestamps:true});
 
+
+const User = mongoose.model('User',userSchema);
+
+module.exports = User;
