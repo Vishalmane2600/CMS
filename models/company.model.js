@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const subscriptionSchema = new mongoose.Schema({
         user:{
             type: mongoose.Schema.Types.ObjectId,
-            ref : 'user',
+            ref : 'User',
         },
        sub_price : {
             type:String,
@@ -12,7 +12,7 @@ const subscriptionSchema = new mongoose.Schema({
        },
        Company:{
          type:mongoose.Schema.Types.ObjectId,
-         ref : 'company' 
+         ref : 'Company' 
        }
 
 },{timestamps:true})
@@ -33,5 +33,6 @@ const companySchema = new mongoose.Schema({
 },{timestamps:true})
 
 const Company = mongoose.model('Company', companySchema);
-const userSub  = mongoose.model('userSub', subscriptionSchema); 
-module.exports = {Company, userSub};
+const UserSub  = mongoose.model('UserSub', subscriptionSchema); 
+
+module.exports = {Company, UserSub};

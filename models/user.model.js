@@ -11,9 +11,9 @@ const userSchema  =  new mongoose.Schema({
         required: true,
         unique: true
     },
-    company:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'company'
+    address:{
+        type: String,
+        required: true,
     },
     role:
     {
@@ -24,6 +24,20 @@ const userSchema  =  new mongoose.Schema({
 },{timestamps:true});
 
 
+const userComSche  =  new mongoose.Schema({
+    user:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'User'
+    },
+    company:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'Company'
+    }
+},{timestamps:true});
+
+
 const User = mongoose.model('User',userSchema);
+const UserCom = mongoose.model('UserCom',userComSche);
 
 module.exports = User;
+module.exports = UserCom;
