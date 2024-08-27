@@ -1,11 +1,10 @@
 const Router = require('express');
-const userdetails  = require('../controllers/user.controller.js');
-
-
+const {userdetails,usercompany}  = require('../controllers/user.controller.js');
 
 const router = Router();
 
-router.route('/user_reg').post(userdetails);
+router.route('/').post(userdetails);
+//router.route('/add_company').post(usercompany);
 
 
 module.exports = router;
