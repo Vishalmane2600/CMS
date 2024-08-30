@@ -1,9 +1,9 @@
 const {User}  =  require('../models/user.model.js')
-const {UserCom} = require('../models/user.model.js')
+const {Company} = require('../models/company.model.js')
 
 const userdetails = async (req ,res) => {
-    const{ name , contact ,address,role} =  req.body;
-    if([name,contact,address,role].some((each)=>each ===""))
+    const{ name,contact,address,email,password} =  req.body;
+    if([name,contact,address,email,password].some((each)=>each ===""))
         {
             return res.status(400).json(
                 {
@@ -12,12 +12,12 @@ const userdetails = async (req ,res) => {
             )
         }   
 
-    const userExisted= await User.findOne({contact});
+    const userExisted= await User.findOne({email});
 
     if(userExisted){
         return res.status(409).json(
             {
-                message: "Contact number already exists"
+                message: "User already exists"
             }
         )
     }
@@ -26,8 +26,10 @@ const userdetails = async (req ,res) => {
         name,
         contact,
         address,
-        role,
+        email,
+        password
        })
+       
        if(!user){
         return res.status(500).json(
             {
@@ -36,7 +38,13 @@ const userdetails = async (req ,res) => {
         )
        }
 
-    return res.status(200).json(
+       const token  = await user.tokengenerator();
+
+      const options ={
+            httpOnly:true,
+            secure:true
+      }
+    return res.status(200).cookie("token",token,options).json(
         {
             user : user,
             message: "User created successfully"
@@ -44,44 +52,8 @@ const userdetails = async (req ,res) => {
     )    
 }
 
-const usercompany = async(req,res) => {
-       const {User_id,Company_id} = req.body;
-       if([User_id,Company_id].some((each)=>each === ""))
-       {
-        return res.status(400).json(
-            {
-                message: "All fields are required"
-            }
-        )
-       }
-     const user  =  await UserCom.findOne({User_id});
-     if(user){
-        return res.status(409).json(
-            {
-                message: "User-Company relationship already exists"
-            }
-        )
-     }
-
-       const userCom = await UserCom.create({
-        User_id,
-        Company_id
-       })
-
-       if(!userCom){
-        return res.status(500).json(
-            {
-                message: "Failed to create user company"
-            }
-        )
-       }
-       
-       return res.status(200).json(
-        {
-            userCom : userCom,
-            message: "Use-Company created successfully"
-        }
-       )
-
+const usercompanyrender = async(req,res)=>{
+        res.render("comReg");
 }
-module.exports = {userdetails,usercompany};
+
+module.exports = {userdetails,usercompanyrender};

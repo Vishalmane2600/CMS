@@ -1,4 +1,5 @@
 const mongoose  = require('mongoose');
+const jwt = require('jsonwebtoken');
 
 const userSchema  =  new mongoose.Schema({
     name:{
@@ -9,34 +10,37 @@ const userSchema  =  new mongoose.Schema({
     contact : {
         type: Number,
         required: true,
-        unique: true
     },
     address:{
         type: String,
         required: true,
     },
-    role:
-    {
-        type : String,
+    email:{
+        type: String,
         required: true,
-        enum: ['Admin','Dispatcher','Manager']
-    }
-},{timestamps:true});
-
-
-const userComSche  =  new mongoose.Schema({
-    user:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'User'
+        unique: true
     },
-    company:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'Company'
+    password:{
+        type: String,
+        required: true
     }
 },{timestamps:true});
 
+
+userSchema.methods.tokengenerator = function() {
+    return jwt.sign(
+        {
+            _id: this._id,
+            name: this.name,
+            contact: this.contact,
+            address: this.address,
+            email: this.email
+        },
+        process.env.JWT_SECRET, 
+        { expiresIn: '1d' } 
+    );
+};
 
 const User = mongoose.model('User',userSchema);
-const UserCom = mongoose.model('UserCom',userComSche);
 
-module.exports = {UserCom,User};
+module.exports = {User};
