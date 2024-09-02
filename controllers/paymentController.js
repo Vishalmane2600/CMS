@@ -1,16 +1,17 @@
 const {Company} = require('../models/company.model.js')
 const {Admin} = require('../models/admin.model.js');
 
-const paypal = require('@paypal/checkout-server-sdk');
+// const paypal = require('@paypal/checkout-server-sdk');
 
-// Configure PayPal environment
-let environment = new paypal.core.SandboxEnvironment(process.env.PAYPAL_ID,process.env.CLIENT_SECRET);
-let client = new paypal.core.PayPalHttpClient(environment);
+// // Configure PayPal environment
+// let environment = new paypal.core.SandboxEnvironment(process.env.PAYPAL_ID,process.env.CLIENT_SECRET);
+// let client = new paypal.core.PayPalHttpClient(environment);
 
 
 const createOrder = async(req,res)=>{
 
     const{ name,contact,address,email,sub_price} =  req.body;
+
     const userExisted= await Company.findOne({email});
     if(userExisted){ return res.status(409).json(
             {
@@ -25,12 +26,13 @@ const createOrder = async(req,res)=>{
         email,
         sub_price
        })
-       const userid  =  req.userId;
+       const user_id  =  req.userid;
        const role = 'ADMIN';
 
       const admin = await Admin.create({
-        userid,
-        role
+        role,
+        user_id,
+        company_id:user._id,
       });
        
        if(!user){
@@ -42,7 +44,7 @@ const createOrder = async(req,res)=>{
        }
        return res.status(500).json(
         {
-            message: "Company Registration Done successfully",
+            message: "Company Registration Done successfully and Now you are Admin of your company ",
             Company_Deatail : user,
             admin : admin
         }

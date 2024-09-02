@@ -5,9 +5,9 @@ const courieStatusSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: ['Pending', 'In Transit', 'Delivered', 'Cancelled']
+        enum: ['Pending','dispatched', 'In Transit', 'Delivered', 'Cancelled']
     },
-    courier :{
+    courier_id :{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Courier',
         required: true
@@ -25,7 +25,7 @@ const courierSchema =  new mongoose.Schema({
 
     },
     sender_contact: { 
-        type: String, 
+        type: Number, 
         required: true 
 
     },
@@ -40,7 +40,7 @@ const courierSchema =  new mongoose.Schema({
 
     },
     recipient_contact: { 
-        type: String,
+        type: Number,
         required: true 
     }, 
     package_weight:{ 
@@ -53,13 +53,14 @@ const courierSchema =  new mongoose.Schema({
     package_type: { 
         type: String 
     },
-    Company:{
-        type:mongoose.Schema.Types.ObjectId,
-        ref: 'company'
-    },
+    Company_Admin:{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin',
+        required: true
+    }
 
 },{timesstamps: true})
 
 const Courier = mongoose.model('Courier', courierSchema);
-
-module.exports = Courier;
+const CourierStatus = mongoose.model('CourierStatus', courieStatusSchema);
+module.exports = {Courier,CourierStatus};

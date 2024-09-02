@@ -1,14 +1,23 @@
 const mongoose = require('mongoose');
 
 const adminSchema =  new mongoose.Schema({
-  user :{
-     type : mongoose.Schema.Types.ObjectId,
-     ref : 'User',
-  },
+ 
   role:{
    type: String,
    required : true
-  }  
+  },
+  user_id:{
+    type : mongoose.Schema.Types.ObjectId,
+    ref : 'User',
+    required: true,
+ },
+  company_id :
+  {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Company',
+    required: true,
+    unique: true,
+  }
   
 },
 {
