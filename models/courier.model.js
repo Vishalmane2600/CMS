@@ -5,7 +5,7 @@ const courieStatusSchema = new mongoose.Schema({
     status: {
         type: String,
         required: true,
-        enum: ['Pending','dispatched', 'In Transit', 'Delivered', 'Cancelled']
+        enum: ['Pending','dispatched', 'In_Transit', 'Delivered', 'Cancelled']
     },
     courier_id :{
         type: mongoose.Schema.Types.ObjectId,
@@ -42,7 +42,12 @@ const courierSchema =  new mongoose.Schema({
     recipient_contact: { 
         type: Number,
         required: true 
-    }, 
+    },
+    recipient_email: { 
+        type: String,
+        required: true 
+
+    },
     package_weight:{ 
         type: Number, 
         required: true 
@@ -52,6 +57,11 @@ const courierSchema =  new mongoose.Schema({
     },
     package_type: { 
         type: String 
+    },
+    notify:{
+        type:String,
+        required: true,
+        enum: ['SMS','Email']
     },
     Company_Admin:{
         type: mongoose.Schema.Types.ObjectId,

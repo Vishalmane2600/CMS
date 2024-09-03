@@ -1,5 +1,6 @@
-const {Courier,CourierStatus, CourierStatus} = require('../models/courier.model');
+const {Courier,CourierStatus} = require('../models/courier.model');
 const winston = require('winston');
+const {triggerNotification,sendEmail} = require('../functions/email.func.js');
 
 const logger = winston.createLogger({
     transports: [
@@ -7,7 +8,7 @@ const logger = winston.createLogger({
     ]
 });
 const createcuriour =  async(req,res) =>{
-      const{sender_name,sender_address,sender_contact,recipient_name,recipient_address,recipient_contact,package_weight,package_dimensions,package_type} = req.body;
+      const{sender_name,sender_address,sender_contact,recipient_name,recipient_address,recipient_contact,recipient_email,package_weight,package_dimensions,package_type,notify} = req.body;
       const courierExisted= await Courier.findOne({package_weight,package_dimensions,package_type});
       if(courierExisted){
         return res.status(409).json(
@@ -24,9 +25,11 @@ const createcuriour =  async(req,res) =>{
         recipient_name,
         recipient_address,
         recipient_contact,
+        recipient_email,
         package_weight,
         package_dimensions,
         package_type,
+        notify,
         Company_Admin:id
 
       })
@@ -70,7 +73,9 @@ const deletecuriour = async(req,res) => {
 }
 
 const updatecuriour = async(req,res) => {
-    const { id } = req.params;
+    const id = req.query.id;
+    
+
     const { recipient_address, status } = req.body;
     try {
         const courier = await Courier.findById(id);
@@ -82,15 +87,22 @@ const updatecuriour = async(req,res) => {
         if (recipient_address){courier.recipient_address = recipient_address;}
 
         const couristaus =  await CourierStatus.findOne({courier_id:id});
-
-        if (status && ['dispatched','In Transit', 'Delivered', 'Cancelled'].includes(status)) {
-            couristaus.status = status;
-        }
-
+       
+        couristaus.status = status;
         courier.updatedAt = Date.now();
 
+        
+       if(courier.notify =='SMS'){
+        await triggerNotification(courier.notify,courier.recipient_contact,status);
+       }
+       else if(courier.notify =='Email'){
+        await triggerNotification(courier.notify,courier.recipient_email,status);
+       }
+     
+    
         await courier.save();
         await couristaus.save();
+       
         return res.status(200).json(
             {
                 message: "updated the status successfully"
