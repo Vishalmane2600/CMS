@@ -8,7 +8,7 @@ const getUserIdFromToken = (req,res,next) => {
         console.log(token);
         const decoded = jwt.verify(token, process.env.JWT_SECRET);
         
-        // Assuming the user ID is stored in the '_id' field in the token payload
+        
         const userId = decoded._id;
         req.userid = userId;
         console.log(`user mid ${req.userid}`);

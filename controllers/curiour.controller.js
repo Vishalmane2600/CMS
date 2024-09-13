@@ -1,4 +1,4 @@
-const {Courier,CourierStatus} = require('../models/courier.model');
+const {Courier,CourierStatus} = require('../models/courier.model.js');
 const winston = require('winston');
 const {triggerNotification,sendEmail} = require('../functions/email.func.js');
 
@@ -8,6 +8,15 @@ const logger = winston.createLogger({
     ]
 });
 const createcuriour =  async(req,res) =>{
+      const role = req.user.role;
+      if(role!='courior manager' || role!='admin'){
+        return res.status(409).json(
+            {
+                message: "You are not authorized to update"
+            }
+        )
+      }
+
       const{sender_name,sender_address,sender_contact,recipient_name,recipient_address,recipient_contact,recipient_email,package_weight,package_dimensions,package_type,notify} = req.body;
       const courierExisted= await Courier.findOne({package_weight,package_dimensions,package_type});
       if(courierExisted){
@@ -47,6 +56,14 @@ const createcuriour =  async(req,res) =>{
 }
 
 const deletecuriour = async(req,res) => {
+    const role = req.user.role;
+    if(role!='courior manager' || role!='admin'){
+        return res.status(409).json(
+            {
+                message: "You are not authorized to update"
+            }
+        )
+      }
     const id = req.query.id;
     console.log(`id ${id}`);
     const courier  = await Courier.findById(id);   
@@ -73,6 +90,14 @@ const deletecuriour = async(req,res) => {
 }
 
 const updatecuriour = async(req,res) => {
+    const role = req.user.role;
+    if(role!='courior manager' || role!='ADMIN'){
+        return res.status(409).json(
+            {
+                message: "You are not authorized to update"
+            }
+        )
+      }
     const id = req.query.id;
     
 
@@ -98,7 +123,6 @@ const updatecuriour = async(req,res) => {
        else if(courier.notify =='Email'){
         await triggerNotification(courier.notify,courier.recipient_email,status);
        }
-     
     
         await courier.save();
         await couristaus.save();

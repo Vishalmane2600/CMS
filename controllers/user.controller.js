@@ -1,5 +1,4 @@
 const {User}  =  require('../models/user.model.js')
-const {Company} = require('../models/company.model.js')
 
 const userdetails = async (req ,res) => {
     const{ name,contact,address,email,password} =  req.body;
