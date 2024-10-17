@@ -6,6 +6,7 @@ const userRoute = require('../routes/user.route.js')
 const adminRoute =  require('../routes/admin.route.js')
 const loginuserRoute = require('../routes/login.route.js')
 const managerRoute = require('../routes/manger.route.js')
+const reportRoute = require('../routes/report.route.js')
 const upload = require('../middlewares/csv.multer.js');
 
 // const companyRoute = require('../routes/company.route.js');
@@ -27,8 +28,8 @@ app.use(cookieParser());
 
 app.use('/user',userRoute);
 app.use('/admin',adminRoute);
-app.use('/userlogin',loginuserRoute)
+app.use('/userlogin',loginuserRoute);
 app.use('/manager',managerRoute);
-
+app.use('/report',reportRoute);
 
 module.exports = app;

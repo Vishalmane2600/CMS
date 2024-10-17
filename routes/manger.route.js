@@ -1,6 +1,6 @@
 const Router =  require('express');
 const {createcuriour,deletecuriour,updatecuriour} = require('../controllers/curiour.controller.js');
-const {checkUserRole} =require('../middlewares/role.mid.js')
+const checkUserRole =require('../middlewares/role.mid.js')
 
 
 const router = Router();
